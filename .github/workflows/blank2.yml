@@ -21,8 +21,6 @@ jobs:
         echo 'DB_PASSWORD=${{secrets.DB_PASSWORD}}' >> .env
         echo 'DB_ROOT_PASSWORD=${{secrets.DB_ROOT_PASSWORD}}' >> .env
     
-    - name: build docker
-      run: docker compose build
     - name: up docker
       run: docker compose up -d
 

@@ -1,0 +1,24 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: self-hosted
+
+    steps:
+    - uses: actions/checkout@main
+    - name: create .env
+      run:
+        echo 'DB_NAME=${{serects.DB_NAME}}'>>.env
+        echo 'DB_USER=${{serects.DB_USER}}'>>.env
+        echo 'DB_PASSWORD=${{serects.DB_PASSWORD}}'>>.env
+        echo 'DB_ROOT_PASSWORD=${{serects.DB_ROOT_PASSWORD}}'>>.env
+    - name: Build Docker
+      run: docker compose up --build -d

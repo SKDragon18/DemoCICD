@@ -32,5 +32,6 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
     - name: Build Docker
       run: docker compose up --build -d 
-
+    - name: List running Docker containers
+      run: docker ps
 

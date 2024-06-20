@@ -16,21 +16,44 @@ jobs:
     - uses: actions/checkout@main
     - name: Checkout repository
       uses: actions/checkout@v2
-    - name: create .env
-      run: 
+    - name: Create .env file
+      run: |
         echo 'DB_NAME=${{secrets.DB_NAME}}' >> .env
         echo 'DB_USER=${{secrets.DB_USER}}' >> .env
         echo 'DB_PASSWORD=${{secrets.DB_PASSWORD}}' >> .env
         echo 'DB_ROOT_PASSWORD=${{secrets.DB_ROOT_PASSWORD}}' >> .env
-    
+        cat .env  # Kiểm tra nội dung file .env
+
+    - name: Ensure .env file exists
+      run: |
+        if [ ! -f .env ]; then
+          echo ".env file does not exist!"
+          exit 1
+        fi
+
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
+
     - name: Log in to Docker Hub
       uses: docker/login-action@v1
       with:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
-    - name: Build Docker
-      run: docker compose up --build -d 
+
+    - name: Build and start Docker containers
+      run: docker compose up --build -d
+
+    - name: List running Docker containers
+      run: docker ps
+
+    - name: Check MySQL logs
+      run: |
+        DB_CONTAINER_ID=$(docker ps --filter "name=db" --format "{{.ID}}")
+        docker logs $DB_CONTAINER_ID
+
+    - name: Check database connection
+      run: |
+        DB_CONTAINER_ID=$(docker ps --filter "name=db" --format "{{.ID}}")
+        docker exec $DB_CONTAINER_ID mysql -u root -p${{ secrets.DB_ROOT_PASSWORD }} -e "SHOW DATABASES;"
 
 

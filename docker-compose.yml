@@ -17,10 +17,10 @@ services:
       - 3306:3306
     env_file: .env
     environment:
-      MYSQL_ROOT_PASSWORD: 'examplepassword'
-      MYSQL_DATABASE: 'wordpressdb'
-      MYSQL_USER: 'long'
-      MYSQL_PASSWORD: 'examplepassword'
+      MYSQL_ROOT_PASSWORD: '${DB_ROOT_PASSWORD}'
+      MYSQL_DATABASE: '${DB_NAME}'
+      MYSQL_USER: '${DB_USER}'
+      MYSQL_PASSWORD: '${DB_PASSWORD}'
     volumes:
       - db-data:/var/lib/mysql
     networks:
@@ -40,7 +40,7 @@ services:
     environment:
       PMA_HOST: db
       PMA_PORT: 3306  
-      MYSQL_ROOT_PASSWORD: 'examplepassword'
+      MYSQL_ROOT_PASSWORD: '${DB_ROOT_PASSWORD}'
     networks:
       - wordpress-network
 
@@ -54,9 +54,9 @@ services:
     env_file: .env
     environment:
       WORDPRESS_DB_HOST: db:3306
-      WORDPRESS_DB_NAME: 'wordpressdb'
-      WORDPRESS_DB_USER: 'long'
-      WORDPRESS_DB_PASSWORD: 'examplepassword'
+      WORDPRESS_DB_NAME: '${DB_NAME}'
+      WORDPRESS_DB_USER: '${DB_USER}'
+      WORDPRESS_DB_PASSWORD: '${DB_ROOT_PASSWORD}'
     volumes:
       - ./src:/var/www/html:rw
     networks:
